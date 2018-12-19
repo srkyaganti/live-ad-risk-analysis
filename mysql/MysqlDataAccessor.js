@@ -32,8 +32,8 @@ function updateHashTag(data) {
         }
 
       
-        pool.query('update hash_tags set ? where hash_tag_id='+data.hash_tag_id, data, callback);
-        
+        let query = pool.query('update hash_tags set ? where hash_tag_id='+data.hash_tag_id, data, callback);
+        console.log(query.sql)
     });
 }
 
@@ -191,15 +191,14 @@ function getHashTagContentMappingGivenHashTagId(hashTagId) {
 
 /*
 var data = {
-    hash_tag_id: 4782,
-    hash_tag_name: 'fodfdsjfojfos fodsfj fodsjso fodjso'
+    hash_tag_id: 6032,
+    total_sentiment_score: 20
 }
-var list = '2';
+
 var res = updateHashTag(data);
 res
 .then(res => console.log(res))
 .catch(error => console.log(error))
-
 */
 
 module.exports = {
@@ -209,5 +208,7 @@ module.exports = {
     getHashTagContentMappingGivenHashTagId,
     getTweetsGivenHashTagId,
     getAllHashTagsForReportIds,
-    getAllReportsList
+    getAllReportsList,
+    createNewReportId,
+    updateHashTag
 }

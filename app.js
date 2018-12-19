@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const cors = require('cors')
 const { getTrendingTopicsForLocations, getTweetsForHashTagObject } = require('./controllers/twitter-controller')
+const { updateHashTag } = require('./mysql/MysqlDataAccessor')
 
 const app = express()
 app.use(logger('dev'))
@@ -27,13 +28,24 @@ app.use('/', (req, res) => {
                     hashTagId: e.map(entry => entry.hash_tag_id).reduce((a, b) => a || b, null),
                     sentiment_score: e.map(entry => entry.sentiment_score).reduce((a, b) => a + b, 0) 
                 }))
-                
-            res.send(
-                data.map(e => ({ 
-                    hashTagId: e.map(entry => entry.hash_tag_id).reduce((a, b) => a || b, null),
-                    sentiment_score: e.map(entry => entry.sentiment_score).reduce((a, b) => a + b, 0) 
-                }))
+
+            const hashTagIdSentimentScoreMapping = data.map(e => ({ 
+                hashTagId: e.map(entry => entry.hash_tag_id).reduce((a, b) => a || b, null),
+                sentiment_score: e.map(entry => entry.sentiment_score).reduce((a, b) => a + b, 0) 
+            }))
+
+            const promises1 = hashTagIdSentimentScoreMapping.map(mapping => 
+                updateHashTag({
+                    hash_tag_id: mapping.hashTagId ,
+                    total_sentiment_score: mapping.sentiment_score
+                })
+                .then(response => response)
+                .catch(error => error)
             )
+
+            Promise.all(promises1)
+            .then(data => res.send(data))
+            .catch(error => res.send(error))
         })
         .catch(error => res.send(error))
 

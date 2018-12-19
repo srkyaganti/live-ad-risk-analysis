@@ -1,5 +1,5 @@
 const { getTrendingTopicsForWOEID, getTweets } = require('../accessors/twitter-accessor')
-const { insertHashTags, insertTweets, insertHashTagTweetMapping } = require('../mysql/MysqlDataAccessor')
+const { insertHashTags, insertTweets, insertHashTagTweetMapping, createNewReportId } = require('../mysql/MysqlDataAccessor')
 const sentiment = require('../clients/sentiment');
 
 const location_woeids = [
@@ -11,25 +11,30 @@ function getTrendingTopicsForLocations() {
         location_woeids.forEach(woeid => {
             getTrendingTopicsForWOEID({ id:woeid })
             .then(response => {
-                const { trends, as_of, created_at, locations} = response[0];
-                const { name } = locations[0]
-                
-                
-                let hashTagObjects = trends.map(trend => ({
-                                        hash_tag_name: trend.name,
-                                        search_query: trend.query,
-                                        as_of,
-                                        created_at,
-                                        location: name,
-                                        location_woeid: woeid
-                                     }));
+                createNewReportId()
+                .then(report_id => {
+                    const { trends, as_of, created_at, locations} = response[0];
+                    const { name } = locations[0]
+                    
+                    
+                    let hashTagObjects = trends.map(trend => ({
+                                            report_id,
+                                            hash_tag_name: trend.name,
+                                            search_query: trend.query,
+                                            as_of,
+                                            created_at,
+                                            location: name,
+                                            location_woeid: woeid
+                                        }));
 
-                const promises = hashTagObjects.map(object =>  insertHashTags(object)
-                                                                .then(data => { object.id = data.id; return object })
-                                                                .catch(error => object))
+                    const promises = hashTagObjects.map(object =>  insertHashTags(object)
+                                                                    .then(data => { object.id = data.id; return object })
+                                                                    .catch(error => object))
 
-                Promise.all(promises)
-                .then(response => resolve(response))
+                    Promise.all(promises)
+                    .then(response => resolve(response))
+                    .catch(error => reject(error))
+                })
                 .catch(error => reject(error))
             })
             .catch(error => reject(error))
