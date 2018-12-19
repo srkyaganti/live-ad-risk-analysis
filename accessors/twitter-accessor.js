@@ -10,7 +10,7 @@ function getTrendingTopicsForWOEID(data) {
             if(error) {
                 reject(error)
             }
-            resolve({ data, response })
+            resolve(data)
         }
 
         client.get('/trends/place', params, callback)
