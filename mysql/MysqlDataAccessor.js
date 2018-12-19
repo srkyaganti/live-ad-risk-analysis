@@ -6,17 +6,13 @@ const pool = require('./Connection')
 function insertHashTags(data) {
 
     return new Promise((resolve, reject) => {
-    
-
         const callback = (error, results, fields) => {
-            console.log(error)
-
             if(error) {
                 reject(error)
             }
             resolve({ id: results.insertId })
         }
-
+        
         pool.query('insert into hash_tags set ?', data, callback);
     });
 
@@ -41,16 +37,14 @@ function insertTweets(data) {
  function insertHashTagTweetMapping(data) {
 
     return new Promise((resolve, reject) => {
-      
-
-       const callback = (error, results, fields) => {
+         const callback = (error, results, fields) => {
            if(error) {
                reject(error)
            }
            resolve({ id: results.insertId })
-       }
+        }
 
-       pool.query('insert into hash_tag_content_mapping set ?', data, callback);
+        pool.query('insert into hash_tag_content_mapping set ?', data, callback);
    });
 }
 

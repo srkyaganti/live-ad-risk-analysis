@@ -2,7 +2,7 @@ const express = require('express')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const cors = require('cors')
-const { getTrendingTopicsForLocations } = require('./controllers/twitter-controller')
+const { getTrendingTopicsForLocations, getTweetsForHashTagObject } = require('./controllers/twitter-controller')
 
 const app = express()
 app.use(logger('dev'))
@@ -13,46 +13,35 @@ app.use(cors())
 
 app.use('/', (req, res) => {
     getTrendingTopicsForLocations()
-    .then(data => res.send(data))
+    .then(data => {
+
+        const promises = data.slice(0, 5).map(obj => 
+            getTweetsForHashTagObject(obj)
+            .then(response => response)
+            .catch(error => error)
+        )
+
+        Promise.all(promises)
+        .then(data => {
+                data.map(e => ({ 
+                    hashTagId: e.map(entry => entry.hash_tag_id).reduce((a, b) => a || b, null),
+                    sentiment_score: e.map(entry => entry.sentiment_score).reduce((a, b) => a + b, 0) 
+                }))
+                
+            res.send(
+                data.map(e => ({ 
+                    hashTagId: e.map(entry => entry.hash_tag_id).reduce((a, b) => a || b, null),
+                    sentiment_score: e.map(entry => entry.sentiment_score).reduce((a, b) => a + b, 0) 
+                }))
+            )
+        })
+        .catch(error => res.send(error))
+
+        // Promise.all(promises)
+        // .then(data => res.send(data))
+        // .catch(error => res.send(error))
+    })
     .catch(error => res.send(error))
 })
-
-// app.use('/:id', (req, res) => {
-//     getTrendingTopicsForWOEID({ id: req.params.id})
-//     .then(response => {
-//         const { as_of, created_at, locations, trends } = response.data[0]
-        
-//         const query = decodeURIComponent(trends[2].query)
-//         const getTweetsRequest = { query }
-        
-//         getTweets(getTweetsRequest)
-//         .then(response => {
-//             const { max_id, max_id_str, next_results, statuses } = response.data
-//             let analysisResults = []
-
-//             statuses.forEach(status => {
-//                 const { lang, text } = status
-
-//                 analysisResults.push(sentiment.analyze(text))
-//             })
-//             res.send(analysisResults)
-//         })
-//         .catch(error => res.send(error))
-
-//         // trends.map(trend => {
-//         //     const query = decodeURIComponent(trend.query)
-//         //     const getTweetsRequest = { query }
-            
-//         //     getTweets(getTweetsRequest)
-//         //     .then(response => console.log(response))
-//         //     .catch(error => console.log(error))
-//         // })
-        
-//         // res.send(response.data[0])
-//     })
-//     .catch(error => {
-//         res.send(error)
-//     })
-// })
 
 module.exports = app
