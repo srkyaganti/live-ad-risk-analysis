@@ -2,11 +2,13 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
 // var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 const { getTrendingTopicsForWOEID, getTweets } = require('./accessors/twitter');
+
+const Sentiment = require('sentiment')
+const sentiment = new Sentiment()
 
 var app = express();
 
@@ -25,7 +27,17 @@ app.use('/:id', (req, res) => {
         const getTweetsRequest = { query }
         
         getTweets(getTweetsRequest)
-        .then(response => res.send(response.data))
+        .then(response => {
+            const { max_id, max_id_str, next_results, statuses } = response.data
+            let analysisResults = []
+
+            statuses.forEach(status => {
+                const { lang, text } = status;
+
+                analysisResults.push(sentiment.analyze(text))
+            })
+            res.send(analysisResults)
+        })
         .catch(error => res.send(error))
 
         // trends.map(trend => {

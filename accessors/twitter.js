@@ -22,8 +22,7 @@ function getTweets(data) {
         const params = {
             q: data.query,
             result_type: 'recent',
-            count: 100,
-            include_entities: true
+            count: 100
         }
 
         const callback = (error, data, response) => {
