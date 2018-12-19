@@ -9,7 +9,7 @@ const pool  = mysql.createPool({
     password        : 'syyagant',
     database        : 'booker'
   });
-  module.exports = twitterClient;
+  module.exports = pool;
   /*
   pool.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
     if (error) throw error;
@@ -34,4 +34,3 @@ connection.connect(function(err) {
 });
 */
 
-console.log("hello gowtham");
