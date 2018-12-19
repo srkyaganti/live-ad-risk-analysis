@@ -22,9 +22,14 @@ function getTrendingTopicsForLocations() {
                                         location: name,
                                         location_woeid: woeid
                                      }));
-                    
-                resolve(hashTagObjects)   
-                // insertHashTags()
+
+                const promises = hashTagObjects.map(object =>  insertHashTags(object)
+                                                                .then(data => { object.id = data.id; return object })
+                                                                .catch(error => object))
+
+                Promise.all(promises)
+                .then(response => resolve(response))
+                .catch(error => reject(error))
             })
             .catch(error => reject(error))
         })

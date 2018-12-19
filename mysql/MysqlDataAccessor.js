@@ -9,10 +9,12 @@ function insertHashTags(data) {
     
 
         const callback = (error, results, fields) => {
+            console.log(error)
+
             if(error) {
                 reject(error)
             }
-            resolve({ id: results.insertId})
+            resolve({ id: results.insertId })
         }
 
         pool.query('insert into hash_tags set ?', data, callback);
