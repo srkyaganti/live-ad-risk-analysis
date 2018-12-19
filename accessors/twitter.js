@@ -21,7 +21,7 @@ function getTweets(data) {
     return new Promise((resolve, reject) => {
         const params = {
             q: data.query,
-            result_type: 'popular',
+            result_type: 'recent',
             count: 100,
             include_entities: true
         }

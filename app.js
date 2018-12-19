@@ -19,18 +19,25 @@ app.use(cookieParser());
 app.use('/:id', (req, res) => {
     getTrendingTopicsForWOEID({ id: req.params.id})
     .then(response => {
-        const { as_of, craeted_at, locations, trends } = response.data[0];
+        const { as_of, created_at, locations, trends } = response.data[0];
         
-        trends.map(trend => {
-            const query = decodeURIComponent(trend.query)
-            const getTweetsRequest = { query }
+        const query = decodeURIComponent(trends[2].query)
+        const getTweetsRequest = { query }
+        
+        getTweets(getTweetsRequest)
+        .then(response => res.send(response.data))
+        .catch(error => res.send(error))
+
+        // trends.map(trend => {
+        //     const query = decodeURIComponent(trend.query)
+        //     const getTweetsRequest = { query }
             
-            getTweets(getTweetsRequest)
-            .then(response => console.log(response))
-            .catch(error => console.log(error))
-        })
+        //     getTweets(getTweetsRequest)
+        //     .then(response => console.log(response))
+        //     .catch(error => console.log(error))
+        // })
         
-        res.send(response)
+        // res.send(response.data[0])
     })
     .catch(error => {
         res.send(error)
