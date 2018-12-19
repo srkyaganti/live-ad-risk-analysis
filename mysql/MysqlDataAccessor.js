@@ -13,9 +13,28 @@ function insertHashTags(data) {
             resolve({ id: results.insertId })
         }
         
+
         pool.query('insert into hash_tags set ?', data, callback);
+        
     });
 
+}
+
+function updateHashTag(data) {
+    return new Promise((resolve, reject) => {
+    
+
+        const callback = (error, results, fields) => {
+            if(error) {
+                reject(error)
+            }
+            resolve({id: results.insertId})
+        }
+
+      
+        pool.query('update hash_tags set ? where hash_tag_id='+data.hash_tag_id, data, callback);
+        
+    });
 }
 
 function insertTweets(data) {
@@ -27,12 +46,29 @@ function insertTweets(data) {
             if(error) {
                 reject(error)
             }
-            resolve({ id: results.insertId })
+            resolve({id: results.insertId})
         }
 
         pool.query('insert into tweets set ?', data, callback);
     });
  }
+
+ function updateTweets(data) {
+    return new Promise((resolve, reject) => {
+    
+
+        const callback = (error, results, fields) => {
+            if(error) {
+                reject(error)
+            }
+            resolve({id: results.insertId})
+        }
+
+      
+        pool.query('update tweets set ? where id='+data.id, data, callback);
+        
+    });
+}
 
  function insertHashTagTweetMapping(data) {
 
@@ -48,19 +84,130 @@ function insertTweets(data) {
    });
 }
 
-var data = {
-    hash_tag_name: 'testing bro fds'
+function updateHashTagTweetMapping(data) {
+    return new Promise((resolve, reject) => {
+    
+
+        const callback = (error, results, fields) => {
+            if(error) {
+                reject(error)
+            }
+            resolve({id: results.insertId})
+        }
+
+      
+        pool.query('update hash_tag_content_mapping set ? where id='+data.id, data, callback);
+        
+    });
 }
+
+function createNewReportId() {
+
+    return new Promise((resolve, reject) => {
+      
+
+       const callback = (error, results, fields) => {
+           if(error) {
+               reject(error)
+           }
+           resolve(results.insertId )
+       }
+       var data = {
+           report_name: 'live-ad-risk'
+       }
+
+       pool.query('insert into reports set ?', data, callback);
+   });
+}
+
+function getAllReportsList() {
+    return new Promise((resolve, reject) => {
+      
+
+        const callback = (error, results, fields) => {
+            if(error) {
+                reject(error)
+            }
+            resolve(results )
+        }
+    
+ 
+        pool.query('select * from reports order by report_creation_time desc', callback);
+    });
+}
+
+function getAllHashTagsForReportIds(list) {
+    return new Promise((resolve, reject) => {
+      
+
+        const callback = (error, results, fields) => {
+            if(error) {
+                reject(error)
+            }
+            resolve(results )
+        }
+    var sql = '(';
+
+    for(var i =0;i<list.length;i++) {
+        sql+=data[i];
+    }
+    sql=sql+')';
+ 
+        pool.query('select * from hash_tags where report_id in '+sql, callback);
+    });
+}
+
+function getTweetsGivenHashTagId(hashTagId) {
+    return new Promise((resolve, reject) => {
+      
+
+        const callback = (error, results, fields) => {
+            if(error) {
+                reject(error)
+            }
+            resolve(results )
+        }
+       
+ 
+        pool.query('select * from tweets where hash_tag_id='+hashTagId, callback);
+    });
+}
+
+function getHashTagContentMappingGivenHashTagId(hashTagId) {
+    return new Promise((resolve, reject) => {
+      
+
+        const callback = (error, results, fields) => {
+            if(error) {
+                reject(error)
+            }
+            resolve(results )
+        }
+       
+ 
+        pool.query('select * from hash_tag_content_mapping where hash_tag_id='+hashTagId, callback);
+    });
+}
+
 /*
-var res = insertTweets(data);
+var data = {
+    hash_tag_id: 4782,
+    hash_tag_name: 'fodfdsjfojfos fodsfj fodsjso fodjso'
+}
+var list = '2';
+var res = updateHashTag(data);
 res
 .then(res => console.log(res))
 .catch(error => console.log(error))
+
 */
-// console.log("hello gowtham dude", JSON.stringify(res,null,2));
 
 module.exports = {
     insertHashTags,
     insertTweets,
-    insertHashTagTweetMapping
+    insertHashTagTweetMapping,
+    getHashTagContentMappingGivenHashTagId,
+    getTweetsGivenHashTagId,
+    getAllHashTagsForReportIds,
+    getAllReportsList
 }
