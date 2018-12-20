@@ -8,12 +8,15 @@ function getReports(data) {
     })
 }
 
-function getReport(id) {
+function getReport(data) {
     return new Promise((resolve, reject) => {
-        axios.post('http://localhost')
+        axios.post('http://localhost:3000/api/report', data)
+        .then(response => resolve(response))
+        .catch(error => reject(error))
     })
 }
 
 export {
-    getReports
+    getReports,
+    getReport
 }

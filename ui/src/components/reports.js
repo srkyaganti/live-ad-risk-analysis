@@ -80,9 +80,9 @@ export default class Reports extends React.PureComponent {
                         </tbody>
                     </Table>
                     <ButtonGroup justified>
-                        <Button bsStyle='primary' onClick={this.getPrevPage} disabled = {this.state.reportsQueryParameters.offset === 0 ? true: false }>{'<'}</Button>
-                        <Button bsStyle='primary'>{ 1 + this.state.reportsQueryParameters.offset/10}</Button>
-                        <Button bsStyle='primary' onClick={this.getNextPage}>{'>'}</Button>
+                        <Button bsStyle='primary' onClick={this.getPrevPage} disabled = {this.state.reportsQueryParameters.offset === 0 ? true: false }>{'  <  '}</Button>
+                        <Button bsStyle='primary'>{'  ' + (1 + this.state.reportsQueryParameters.offset/10) + '  '}</Button>
+                        <Button bsStyle='primary' onClick={this.getNextPage}>{'  >  '}</Button>
                     </ButtonGroup>
                 </Panel.Body>
             </Panel>
