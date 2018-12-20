@@ -209,6 +209,8 @@ module.exports = {
     getTweetsGivenHashTagId,
     getAllHashTagsForReportIds,
     getAllReportsList,
-    createNewReportId,
-    updateHashTag
+    updateHashTag,
+    updateTweets,
+    updateHashTagTweetMapping,
+    createNewReportId
 }
