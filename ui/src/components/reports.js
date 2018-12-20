@@ -65,24 +65,36 @@ export default class Reports extends React.PureComponent {
                         </thead>
                         <tbody>
                             {
-                                reports.map((report, index) => (
-                                    <tr key={ report.hash_tag_id }>
-                                        <td>{ index + 1 }</td>
-                                        <td>{ report.hash_tag_name }</td>
-                                        <td>{ report.search_query }</td>
-                                        <td>{ report.approved_ad_couint }</td>
-                                        <td>{ report.rejected_ad_count }</td>
-                                        <td>
-                                            { 
-                                                (report.approved_ad_couint/(report.approved_ad_couint + report.rejected_ad_count)*100)
-                                                .toString().substring(0, 5)
-                                            }
-                                        </td>
-                                        <td>{ report.total_sentiment_score }</td>
-                                        <td>{ report.location }</td>
-                                        <td><Button bsStyle='primary' bsSize='small' href={`reports/${report.hash_tag_id}`}>View tweets</Button></td>
-                                    </tr>
-                                ))
+                                reports.map((report, index) => {
+                                    let approvalPercentage = report.approved_ad_couint/(report.approved_ad_couint + report.rejected_ad_count)*100
+                                    
+                                    if(isNaN(approvalPercentage)) {
+                                        approvalPercentage = 'N/A'
+                                    }
+                                    
+                                    return (
+                                        <tr key={ report.hash_tag_id }>
+                                            <td>{ index + 1 }</td>
+                                            <td>{ report.hash_tag_name }</td>
+                                            <td>{ report.search_query }</td>
+                                            <td>{ report.approved_ad_couint }</td>
+                                            <td>{ report.rejected_ad_count }</td>
+                                            <td>
+                                                {
+                                                 approvalPercentage   
+                                                }
+                                            </td>
+                                            <td>{ report.total_sentiment_score }</td>
+                                            <td>{ report.location }</td>
+                                            <td>
+                                                <ButtonGroup>
+                                                    <Button bsStyle='primary' bsSize='small' href={`reports/${report.hash_tag_id}`}>View tweets</Button>
+                                                    <Button bsStyle='danger' bsSize='small'>Andon</Button>
+                                                </ButtonGroup>
+                                            </td>
+                                        </tr>
+                                    )
+                                })
                             }
                         </tbody>
                     </Table>
