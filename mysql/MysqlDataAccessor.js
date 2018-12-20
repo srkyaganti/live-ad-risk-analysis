@@ -204,16 +204,6 @@ function getHashTagContentMappingGivenHashTagId(hashTagId) {
     });
 }
 
-
-var data = {
-    size: 10,
-    offset: 0
-}
-getHashTags(data)
-.then(res => console.log(res))
-.catch(error => console.log(error))
-
-
 module.exports = {
     insertHashTags,
     insertTweets,

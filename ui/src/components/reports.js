@@ -53,10 +53,11 @@ export default class Reports extends React.PureComponent {
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Report Name</th>
-                                <th>Search Query</th>
-                                <th>Approved Ad Count</th>
-                                <th>Rejected Ad Count</th>
+                                <th>Trend topic</th>
+                                <th>Search query</th>
+                                <th>Approved Ad count</th>
+                                <th>Rejected Ad count</th>
+                                <th>Approval percentage</th>
                                 <th>Sentiment score</th>
                                 <th>Location</th>
                                 <th>Actions</th>
@@ -71,9 +72,15 @@ export default class Reports extends React.PureComponent {
                                         <td>{ report.search_query }</td>
                                         <td>{ report.approved_ad_couint }</td>
                                         <td>{ report.rejected_ad_count }</td>
+                                        <td>
+                                            { 
+                                                (report.approved_ad_couint/(report.approved_ad_couint + report.rejected_ad_count)*100)
+                                                .toString().substring(0, 5)
+                                            }
+                                        </td>
                                         <td>{ report.total_sentiment_score }</td>
                                         <td>{ report.location }</td>
-                                        <td><Button bsStyle='primary' bsSize='small' href={`reports/${report.hash_tag_id}`}>View report</Button></td>
+                                        <td><Button bsStyle='primary' bsSize='small' href={`reports/${report.hash_tag_id}`}>View tweets</Button></td>
                                     </tr>
                                 ))
                             }
