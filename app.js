@@ -3,7 +3,7 @@ const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const cors = require('cors')
 const { getTrendingTopicsForLocations, getTweetsForHashTagObject } = require('./controllers/twitter-controller')
-const { updateHashTag } = require('./mysql/MysqlDataAccessor')
+const { updateHashTag, getHashTags } = require('./mysql/MysqlDataAccessor')
 
 const app = express()
 app.use(logger('dev'))
@@ -11,6 +11,13 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(cors())
+
+app.post('/api/reports', (req, res) => {
+    const parameters = req.body
+    getHashTags(parameters)
+    .then(data => res.json(data))
+    .catch(error => res.json(error))
+})
 
 app.use('/', (req, res) => {
     getTrendingTopicsForLocations()

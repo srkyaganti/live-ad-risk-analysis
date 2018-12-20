@@ -157,6 +157,21 @@ function getAllHashTagsForReportIds(list) {
     });
 }
 
+function getHashTags({ size, offset }) {
+    return new Promise((resolve, reject) => {
+        
+        const callback = (error, results, fields) => {
+            if(error) {
+                reject(error)
+            } else {
+                resolve(results)
+            }
+        }
+
+        pool.query(`select * from hash_tags where total_sentiment_score is not null order by hash_tag_id desc limit ${offset}, ${size}`, callback)
+    })
+}
+
 function getTweetsGivenHashTagId(hashTagId) {
     return new Promise((resolve, reject) => {
       
@@ -189,17 +204,15 @@ function getHashTagContentMappingGivenHashTagId(hashTagId) {
     });
 }
 
-/*
-var data = {
-    hash_tag_id: 6032,
-    total_sentiment_score: 20
-}
 
-var res = updateHashTag(data);
-res
+var data = {
+    size: 10,
+    offset: 0
+}
+getHashTags(data)
 .then(res => console.log(res))
 .catch(error => console.log(error))
-*/
+
 
 module.exports = {
     insertHashTags,
@@ -212,5 +225,6 @@ module.exports = {
     updateHashTag,
     updateTweets,
     updateHashTagTweetMapping,
-    createNewReportId
+    createNewReportId,
+    getHashTags
 }
