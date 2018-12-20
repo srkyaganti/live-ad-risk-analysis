@@ -19,7 +19,7 @@ class App extends Component {
             </Navbar.Brand>
           </Navbar.Header>
         </Navbar>
-        <Grid style={{ marginTop: 100 }}>
+        <Grid style={{ marginTop: 100 }} fluid>
           <Switch>
             <Route exact path='/' 
               render={() => <Reports/>}

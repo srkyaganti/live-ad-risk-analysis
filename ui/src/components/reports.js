@@ -90,6 +90,7 @@ export default class Reports extends React.PureComponent {
                                                 <ButtonGroup>
                                                     <Button bsStyle='primary' bsSize='small' href={`reports/${report.hash_tag_id}`}>View tweets</Button>
                                                     <Button bsStyle='danger' bsSize='small'>Andon</Button>
+                                                    <Button bsStyle='warning' bsSize='small'>Ignore</Button>
                                                 </ButtonGroup>
                                             </td>
                                         </tr>

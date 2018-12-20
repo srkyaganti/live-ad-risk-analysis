@@ -168,7 +168,7 @@ function getHashTags({ size, offset }) {
             }
         }
 
-        pool.query(`select * from hash_tags where total_sentiment_score is not null order by total_sentiment_score asc limit ${offset}, ${size}`, callback)
+        pool.query(`select * from hash_tags where total_sentiment_score is not null order by hash_tag_id desc limit ${offset}, ${size}`, callback)
     })
 }
 
