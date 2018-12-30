@@ -59,6 +59,7 @@ export default class Reports extends React.PureComponent {
                                 <th>Rejected Ad count</th>
                                 <th>Approval percentage</th>
                                 <th>Sentiment score</th>
+                                <th>Timestamp</th>
                                 <th>Location</th>
                                 <th>Actions</th>
                             </tr>
@@ -67,7 +68,11 @@ export default class Reports extends React.PureComponent {
                             {
                                 reports.map((report, index) => {
                                     let approvalPercentage = report.approved_ad_couint/(report.approved_ad_couint + report.rejected_ad_count)*100
-                                    
+                                    let approvedCount = report.approved_ad_couint;
+                                    if(!approvedCount || approvedCount == '') {
+                                        approvedCount = 0
+                                    }
+
                                     if(isNaN(approvalPercentage)) {
                                         approvalPercentage = 'N/A'
                                     }
@@ -85,12 +90,12 @@ export default class Reports extends React.PureComponent {
                                                 }
                                             </td>
                                             <td>{ report.total_sentiment_score }</td>
+                                            <td>{ report.as_of }</td>
                                             <td>{ report.location }</td>
                                             <td>
                                                 <ButtonGroup>
                                                     <Button bsStyle='primary' bsSize='small' href={`reports/${report.hash_tag_id}`}>View tweets</Button>
                                                     <Button bsStyle='danger' bsSize='small'>Andon</Button>
-                                                    <Button bsStyle='warning' bsSize='small'>Ignore</Button>
                                                 </ButtonGroup>
                                             </td>
                                         </tr>

@@ -15,7 +15,7 @@ class App extends Component {
         <Navbar fluid inverse style={{ borderRadius: 0 }}>
           <Navbar.Header>
             <Navbar.Brand>
-              <a href='/'>Catalog Risk Analysis Tool</a>
+              <a href='/'>Ad Catalog Risk Analysis Engine</a>
             </Navbar.Brand>
           </Navbar.Header>
         </Navbar>
